@@ -8,20 +8,20 @@ export const Cards = (props) => {
     <Wrapper>
       <Card>
         <TitleCard>Infected</TitleCard>
-        <Number>{props.infected}</Number>
-        <Date>date {props.date.toString()}</Date>
+        <Number>{props.infected.value}</Number>
+        <Date>date</Date>
         <CardText>number of active Cases of COVID-19</CardText>
       </Card>
       <Card>
         <TitleCard>Recovered</TitleCard>
-        <Number>{props.recovered}</Number>
-        <Date>date {props.date.toString()}</Date>
+        <Number>{props.recovered.value}</Number>
+        <Date>date</Date>
         <CardText>number of recovered Cases of COVID-19</CardText>
       </Card>
       <Card>
         <TitleCard>Deaths</TitleCard>
-        <Number>{props.depths}</Number>
-        <Date>date {props.date.toString()}</Date>
+        <Number>{props.deaths.value}</Number>
+        <Date>date</Date>
         <CardText>number of deaths Cases of COVID-19</CardText>
       </Card>
     </Wrapper>

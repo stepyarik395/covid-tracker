@@ -6,30 +6,27 @@ import { useState, useEffect } from 'react';
 import axios from "axios";
 
 
+
+
 const App = () => {
-  const datetime = new Date()
-  const [recovered, handlerecovered] = useState('')
-  const [infected, handleinfected] = useState('')
-  const [depths, handledepths] = useState('')
-  const [countries, handlecountries] = useState('')
-
-
+  const [infected, setRepos] = useState([]);
+  // const datetime = new Date()
+  const [recovered, handlerecovered] = useState([])
+  const [deaths, handledepths] = useState([])
+  const [countries, handlecountries] = useState([])
   useEffect(() => {
-    axios.get(`https://covid19.mathdro.id/api`)
-      .then(res => {
-        const recoveredpeople = res.data.recovered.value;
-        const infectedpeople = res.data.confirmed.value;
-        const depthspeople = res.data.deaths.value;
-        handlerecovered(recoveredpeople)
-        handleinfected(infectedpeople)
-        handledepths(depthspeople)
-      })
-  });
+    const fetchData = async () => {
+      const response = await axios.get('https://covid19.mathdro.id/api');
+      setRepos(response.data.confirmed);
+      handlerecovered(response.data.recovered);
+      handledepths(response.data.deaths);
+    }
+    fetchData();
+  }, []);
   return (
     <div className="wrapper">
-      {console.log(countries)}
       <Title>Covid Tracker</Title>
-      <Cards date={datetime} recovered={recovered} infected={infected} depths={depths} />
+      <Cards infected={infected} recovered={recovered} deaths={deaths} />
       <div className="container-label">
         <LabelinfoText>Infected</LabelinfoText>
         <LabelinfoText>deaths</LabelinfoText>
