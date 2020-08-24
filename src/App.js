@@ -10,33 +10,52 @@ import axios from "axios";
 
 const App = () => {
   const [infected, setRepos] = useState([]);
-  // const datetime = new Date()
   const [recovered, handlerecovered] = useState([])
   const [deaths, handledepths] = useState([])
   const [countries, handlecountries] = useState([])
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get('https://covid19.mathdro.id/api');
-      setRepos(response.data.confirmed);
-      handlerecovered(response.data.recovered);
-      handledepths(response.data.deaths);
+  const [targetcountry, handlecountry] = useState('global')
+
+  const fetchData = async () => {
+    const responseglobal = await axios.get('https://covid19.mathdro.id/api');
+    const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
+    setRepos(responseglobal.data.confirmed);
+    handlerecovered(responseglobal.data.recovered);
+    handledepths(responseglobal.data.deaths);
+    handlecountries(responsecountries.data.countries)
+  }
+
+  const somefunc = () => {
+    const arrcountries = []
+    for (let i = 1; i < countries.length; i++) {
+      arrcountries.push(countries[i].name)
     }
+    return arrcountries
+  }
+
+  useEffect(() => {
     fetchData();
   }, []);
   return (
-    <div className="wrapper">
+    <div className="wrapper" >
       <Title>Covid Tracker</Title>
       <Cards infected={infected} recovered={recovered} deaths={deaths} />
-      <div className="container-label">
+      <Wrapperaligncenter className="container-label">
         <LabelinfoText>Infected</LabelinfoText>
         <LabelinfoText>deaths</LabelinfoText>
-      </div>
-      <select>
-        <option>Global</option>
-      </select>
-    </div>
+      </Wrapperaligncenter>
+      <Wrapperaligncenter>
+        <select value={targetcountry} onChange={(event) => { handlecountry(event.target.value) }}>
+          <option value="global">Global</option>
+          {somefunc().map((i, item) => {
+            return <option value={i} key={item}>{i}</option>
+          })}
+        </select>
+      </Wrapperaligncenter>
+
+    </div >
   );
 }
+
 
 export default App;
 const Title = styled.h2`
@@ -45,18 +64,17 @@ font-size:3rem;
 text-align:center;
 `
 const Select = styled.select`
+cursor:pointer;
 text-align:center;
+
 `;
 const LabelinfoText = styled.span`
+padding:1rem;
 display:block;
 font-size:2rem;
-&::after{
-content:'';
-display: block;
-width:10rem;
-height:3vh;
-background:red;
-text-align:center;
-}
 `
-
+const Wrapperaligncenter = styled.div`
+padding-top:4rem;
+display:flex;
+justify-content:center;
+`
