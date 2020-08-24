@@ -5,15 +5,14 @@ import { Cards } from './components/Cards'
 import { useState, useEffect } from 'react';
 import axios from "axios";
 
-
-
-
 const App = () => {
+
   const [infected, setRepos] = useState([]);
   const [recovered, handlerecovered] = useState([])
   const [deaths, handledepths] = useState([])
   const [countries, handlecountries] = useState([])
   const [targetcountry, handlecountry] = useState('global')
+
 
   const fetchData = async () => {
     const responseglobal = await axios.get('https://covid19.mathdro.id/api');
@@ -21,7 +20,7 @@ const App = () => {
     setRepos(responseglobal.data.confirmed);
     handlerecovered(responseglobal.data.recovered);
     handledepths(responseglobal.data.deaths);
-    handlecountries(responsecountries.data.countries)
+    handlecountries(responsecountries.data.countries);
   }
 
   const somefunc = () => {
@@ -32,9 +31,13 @@ const App = () => {
     return arrcountries
   }
 
+  const soma = (event) => {
+    handlecountry(event.target.value)
+  }
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <div className="wrapper" >
       <Title>Covid Tracker</Title>
@@ -44,17 +47,19 @@ const App = () => {
         <LabelinfoText>deaths</LabelinfoText>
       </Wrapperaligncenter>
       <Wrapperaligncenter>
-        <select value={targetcountry} onChange={(event) => { handlecountry(event.target.value) }}>
-          <option value="global">Global</option>
+        <select value={targetcountry} onChange={(event) => {
+          soma(event)
+        }}>
+          <option value='global'>global</option>
           {somefunc().map((i, item) => {
             return <option value={i} key={item}>{i}</option>
           })}
         </select>
       </Wrapperaligncenter>
-
     </div >
   );
 }
+
 
 
 export default App;
