@@ -15,13 +15,28 @@ const App = () => {
   const [targetcountry, handlecountry] = useState('global')
 
 
-  const fetchData = async () => {
+
+  const data = {
+    labels: ['infected', 'Recovered', 'death'],
+    datasets: [
+      {
+        data: [infected.value, recovered.value, deaths.value],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+      }
+    ]
+  };
+  console.log(data.datasets)
+
+
+  const fetchData = async (data) => {
     const responseglobal = await axios.get('https://covid19.mathdro.id/api');
     const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
     setRepos(responseglobal.data.confirmed);
     handlerecovered(responseglobal.data.recovered);
     handledepths(responseglobal.data.deaths);
     handlecountries(responsecountries.data.countries);
+
   }
 
   const somefunc = () => {
@@ -47,9 +62,11 @@ const App = () => {
     }
   }
   useEffect(() => {
+
     fetchData();
   }, []);
-  console.log(targetcountry)
+
+
   return (
     <div className="wrapper" >
       <Title>Covid Tracker</Title>
@@ -68,13 +85,15 @@ const App = () => {
           })}
         </select>
       </Wrapperaligncenter>
-      <Doughnut data={deaths}
-        width={100}
-        height={50}
-        options={{ maintainAspectRatio: false }} />
+      <WrapperChart>
+        <Doughnut data={data}
+          options={{ maintainAspectRatio: false }} />
+      </WrapperChart>
+
     </div >
   );
 }
+
 
 
 
@@ -99,3 +118,9 @@ padding-top:4rem;
 display:flex;
 justify-content:center;
 `
+const WrapperChart = styled.div`
+padding-top:40px;
+margin:0 auto;
+max-width:500px;
+height:200px;
+`;
