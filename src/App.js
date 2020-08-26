@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components'
 import './App.css';
 import { Cards } from './components/Cards'
+import { Chart } from './components/Chart'
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { Doughnut } from 'react-chartjs-2';
+
 
 const App = () => {
   const [infected, handleinfected] = useState([]);
@@ -18,17 +19,6 @@ const App = () => {
     handlerecovered(responseglobal.data.recovered);
     handledepths(responseglobal.data.deaths);
   }
-
-  const data = {
-    labels: ['infected', 'Recovered', 'death'],
-    datasets: [
-      {
-        data: [infected.value, recovered.value, deaths.value],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-      }
-    ]
-  };
 
   const fetchData = async () => {
     const responseglobal = await axios.get('https://covid19.mathdro.id/api');
@@ -65,8 +55,6 @@ const App = () => {
       <Title>Covid Tracker</Title>
       <Cards infected={infected} recovered={recovered} deaths={deaths} />
       <Wrapperaligncenter className="container-label">
-        <LabelinfoText>Infected</LabelinfoText>
-        <LabelinfoText>deaths</LabelinfoText>
       </Wrapperaligncenter>
       <Wrapperaligncenter>
         <select value={targetcountry} onChange={(event) => {
@@ -79,10 +67,8 @@ const App = () => {
         </select>
       </Wrapperaligncenter>
       <WrapperChart>
-        <Doughnut data={data}
-          options={{ maintainAspectRatio: false }} />
+        <Chart infected={infected} recovered={recovered} deaths={deaths} />
       </WrapperChart>
-
     </div >
   );
 }
@@ -92,11 +78,6 @@ const Title = styled.h2`
 padding-top:7rem;
 font-size:3rem;
 text-align:center;
-`
-const LabelinfoText = styled.span`
-padding:1rem;
-display:block;
-font-size:2rem;
 `
 const Wrapperaligncenter = styled.div`
 padding-top:4rem;
