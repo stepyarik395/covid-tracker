@@ -6,7 +6,6 @@ import { Chart } from './components/Chart'
 import { useState, useEffect } from 'react';
 import axios from "axios";
 
-
 const App = () => {
   const [infected, handleinfected] = useState([]);
   const [recovered, handlerecovered] = useState([])
@@ -19,14 +18,12 @@ const App = () => {
     handlerecovered(responseglobal.data.recovered);
     handledepths(responseglobal.data.deaths);
   }
-
   const fetchData = async () => {
     const responseglobal = await axios.get('https://covid19.mathdro.id/api');
     const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
     SetState(responseglobal);
     handlecountries(responsecountries.data.countries)
   }
-
   const arrtowns = () => {
     const arrcountries = []
     for (let i = 1; i < countries.length; i++) {
@@ -46,7 +43,6 @@ const App = () => {
     }
   }
   useEffect(() => {
-
     fetchData();
   }, []);
 
