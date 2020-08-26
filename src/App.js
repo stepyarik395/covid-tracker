@@ -7,14 +7,17 @@ import axios from "axios";
 import { Doughnut } from 'react-chartjs-2';
 
 const App = () => {
-
-  const [infected, setRepos] = useState([]);
+  const [infected, handleinfected] = useState([]);
   const [recovered, handlerecovered] = useState([])
   const [deaths, handledepths] = useState([])
   const [countries, handlecountries] = useState([])
   const [targetcountry, handlecountry] = useState('global')
 
-
+  let SetState = (responseglobal) => {
+    handleinfected(responseglobal.data.confirmed);
+    handlerecovered(responseglobal.data.recovered);
+    handledepths(responseglobal.data.deaths);
+  }
 
   const data = {
     labels: ['infected', 'Recovered', 'death'],
@@ -26,20 +29,15 @@ const App = () => {
       }
     ]
   };
-  console.log(data.datasets)
 
-
-  const fetchData = async (data) => {
+  const fetchData = async () => {
     const responseglobal = await axios.get('https://covid19.mathdro.id/api');
     const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
-    setRepos(responseglobal.data.confirmed);
-    handlerecovered(responseglobal.data.recovered);
-    handledepths(responseglobal.data.deaths);
-    handlecountries(responsecountries.data.countries);
-
+    SetState(responseglobal);
+    handlecountries(responsecountries.data.countries)
   }
 
-  const somefunc = () => {
+  const arrtowns = () => {
     const arrcountries = []
     for (let i = 1; i < countries.length; i++) {
       arrcountries.push(countries[i].name)
@@ -47,25 +45,20 @@ const App = () => {
     return arrcountries
   }
 
-  const soma = async (event) => {
+  const handlerequest = async (event) => {
     handlecountry(event.target.value)
     if (event.target.value === 'global') {
       const responseglobal = await axios.get('https://covid19.mathdro.id/api');
-      setRepos(responseglobal.data.confirmed);
-      handlerecovered(responseglobal.data.recovered);
-      handledepths(responseglobal.data.deaths);
+      SetState(responseglobal);
     } else {
-      const responsecountries = await axios.get(`https://covid19.mathdro.id/api/countries/${event.target.value}`);
-      setRepos(responsecountries.data.confirmed);
-      handlerecovered(responsecountries.data.recovered);
-      handledepths(responsecountries.data.deaths);
+      const responseglobal = await axios.get(`https://covid19.mathdro.id/api/countries/${event.target.value}`);
+      SetState(responseglobal);
     }
   }
   useEffect(() => {
 
     fetchData();
   }, []);
-
 
   return (
     <div className="wrapper" >
@@ -77,10 +70,10 @@ const App = () => {
       </Wrapperaligncenter>
       <Wrapperaligncenter>
         <select value={targetcountry} onChange={(event) => {
-          soma(event)
+          handlerequest(event)
         }}>
           <option value='global'>global</option>
-          {somefunc().map((i, item) => {
+          {arrtowns().map((i, item) => {
             return <option value={i} key={item}>{i}</option>
           })}
         </select>
@@ -94,20 +87,12 @@ const App = () => {
   );
 }
 
-
-
-
 export default App;
 const Title = styled.h2`
 padding-top:7rem;
 font-size:3rem;
 text-align:center;
 `
-const Select = styled.select`
-cursor:pointer;
-text-align:center;
-
-`;
 const LabelinfoText = styled.span`
 padding:1rem;
 display:block;
