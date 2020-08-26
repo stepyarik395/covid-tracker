@@ -4,6 +4,7 @@ import './App.css';
 import { Cards } from './components/Cards'
 import { useState, useEffect } from 'react';
 import axios from "axios";
+import { Doughnut } from 'react-chartjs-2';
 
 const App = () => {
 
@@ -31,13 +32,24 @@ const App = () => {
     return arrcountries
   }
 
-  const soma = (event) => {
+  const soma = async (event) => {
     handlecountry(event.target.value)
+    if (event.target.value === 'global') {
+      const responseglobal = await axios.get('https://covid19.mathdro.id/api');
+      setRepos(responseglobal.data.confirmed);
+      handlerecovered(responseglobal.data.recovered);
+      handledepths(responseglobal.data.deaths);
+    } else {
+      const responsecountries = await axios.get(`https://covid19.mathdro.id/api/countries/${event.target.value}`);
+      setRepos(responsecountries.data.confirmed);
+      handlerecovered(responsecountries.data.recovered);
+      handledepths(responsecountries.data.deaths);
+    }
   }
   useEffect(() => {
     fetchData();
   }, []);
-
+  console.log(targetcountry)
   return (
     <div className="wrapper" >
       <Title>Covid Tracker</Title>
@@ -56,6 +68,10 @@ const App = () => {
           })}
         </select>
       </Wrapperaligncenter>
+      <Doughnut data={deaths}
+        width={100}
+        height={50}
+        options={{ maintainAspectRatio: false }} />
     </div >
   );
 }
