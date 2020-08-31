@@ -7,6 +7,18 @@ import { useState, useEffect } from 'react';
 import axios from "axios";
 
 const App = () => {
+  let todaydate = new Date();
+
+  let options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+    timezone: 'UTC',
+    hour: 'numeric',
+    minute: 'numeric',
+  };
+  let currentdate = todaydate.toLocaleString('ru', options);
 
   const [states, setState] = useState({
     infected: '',
@@ -38,7 +50,6 @@ const App = () => {
     return arrcountries
   }
 
-
   const handlerequest = async (event) => {
     handlecountries(event.target.value);
     if (event.target.value === 'global') {
@@ -61,7 +72,7 @@ const App = () => {
   return (
     <div className="wrapper" >
       <Title>Covid Tracker</Title>
-      <Cards infected={states.infected} recovered={states.recovered} deaths={states.tmpdeaths} />
+      <Cards date={currentdate} infected={states.infected} recovered={states.recovered} deaths={states.tmpdeaths} />
       <Wrapperaligncenter className="container-label">
       </Wrapperaligncenter>
       <Wrapperaligncenter>

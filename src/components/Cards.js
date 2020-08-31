@@ -1,27 +1,28 @@
 import React from 'react';
 import styled from 'styled-components'
-
+import { useState, useEffect } from 'react';
 
 
 export const Cards = (props) => {
+
   return (
     <Wrapper>
       <Card>
         <TitleCard>Infected</TitleCard>
         <Number>{props.infected}</Number>
-        <Date>date</Date>
+        <Date>{props.date}</Date>
         <CardText>number of active Cases of COVID-19</CardText>
       </Card>
       <Card>
         <TitleCard>Recovered</TitleCard>
         <Number>{props.recovered}</Number>
-        <Date>date</Date>
+        <Date>{props.date}</Date>
         <CardText>number of recovered Cases of COVID-19</CardText>
       </Card>
       <Card>
         <TitleCard>Deaths</TitleCard>
         <Number>{props.deaths}</Number>
-        <Date>date</Date>
+        <Date>{props.date}</Date>
         <CardText>number of deaths Cases of COVID-19</CardText>
       </Card>
     </Wrapper>
