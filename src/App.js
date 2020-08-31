@@ -7,39 +7,56 @@ import { useState, useEffect } from 'react';
 import axios from "axios";
 
 const App = () => {
-  const [infected, handleinfected] = useState([]);
-  const [recovered, handlerecovered] = useState([])
-  const [deaths, handledepths] = useState([])
-  const [countries, handlecountries] = useState([])
-  const [targetcountry, handlecountry] = useState('global')
 
-  let SetState = (responseglobal) => {
-    handleinfected(responseglobal.data.confirmed);
-    handlerecovered(responseglobal.data.recovered);
-    handledepths(responseglobal.data.deaths);
-  }
+  const [states, setState] = useState({
+    infected: '',
+    recovered: '',
+    tmpdeaths: '',
+    countries: [],
+  });
+
+  const [currentcountry, handlecountries] = useState('global');
   const fetchData = async () => {
     const responseglobal = await axios.get('https://covid19.mathdro.id/api');
     const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
-    SetState(responseglobal);
-    handlecountries(responsecountries.data.countries)
+    setState({
+      infected: responseglobal.data.confirmed.value,
+      recovered: responseglobal.data.recovered.value,
+      tmpdeaths: responseglobal.data.deaths.value,
+      countries: responsecountries.data.countries,
+    })
+
   }
+
   const arrtowns = () => {
     const arrcountries = []
-    for (let i = 1; i < countries.length; i++) {
-      arrcountries.push(countries[i].name)
+    for (let i = 1; i < states.countries.length; i++) {
+      arrcountries.push(states.countries[i].name)
     }
     return arrcountries
   }
 
+
   const handlerequest = async (event) => {
-    handlecountry(event.target.value)
+    handlecountries(event.target.value);
     if (event.target.value === 'global') {
       const responseglobal = await axios.get('https://covid19.mathdro.id/api');
-      SetState(responseglobal);
+      const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
+      setState({
+        infected: responseglobal.data.confirmed.value,
+        recovered: responseglobal.data.recovered.value,
+        tmpdeaths: responseglobal.data.deaths.value,
+        countries: responsecountries.data.countries,
+      })
     } else {
       const responseglobal = await axios.get(`https://covid19.mathdro.id/api/countries/${event.target.value}`);
-      SetState(responseglobal);
+      const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
+      setState({
+        infected: responseglobal.data.confirmed.value,
+        recovered: responseglobal.data.recovered.value,
+        tmpdeaths: responseglobal.data.deaths.value,
+        countries: responsecountries.data.countries,
+      })
     }
   }
   useEffect(() => {
@@ -49,11 +66,11 @@ const App = () => {
   return (
     <div className="wrapper" >
       <Title>Covid Tracker</Title>
-      <Cards infected={infected} recovered={recovered} deaths={deaths} />
+      <Cards infected={states.infected} recovered={states.recovered} deaths={states.tmpdeaths} />
       <Wrapperaligncenter className="container-label">
       </Wrapperaligncenter>
       <Wrapperaligncenter>
-        <select value={targetcountry} onChange={(event) => {
+        <select value={currentcountry} onChange={(event) => {
           handlerequest(event)
         }}>
           <option value='global'>global</option>
@@ -63,7 +80,7 @@ const App = () => {
         </select>
       </Wrapperaligncenter>
       <WrapperChart>
-        <Chart infected={infected} recovered={recovered} deaths={deaths} />
+        <Chart infected={states.infected} recovered={states.recovered} deaths={states.tmpdeaths} />
       </WrapperChart>
     </div >
   );
