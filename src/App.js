@@ -16,6 +16,8 @@ const App = () => {
   });
 
   const [currentcountry, handlecountries] = useState('global');
+
+
   const fetchData = async () => {
     const responseglobal = await axios.get('https://covid19.mathdro.id/api');
     const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
@@ -40,14 +42,7 @@ const App = () => {
   const handlerequest = async (event) => {
     handlecountries(event.target.value);
     if (event.target.value === 'global') {
-      const responseglobal = await axios.get('https://covid19.mathdro.id/api');
-      const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
-      setState({
-        infected: responseglobal.data.confirmed.value,
-        recovered: responseglobal.data.recovered.value,
-        tmpdeaths: responseglobal.data.deaths.value,
-        countries: responsecountries.data.countries,
-      })
+      fetchData()
     } else {
       const responseglobal = await axios.get(`https://covid19.mathdro.id/api/countries/${event.target.value}`);
       const responsecountries = await axios.get('https://covid19.mathdro.id/api/countries');
