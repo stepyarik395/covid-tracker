@@ -24,7 +24,7 @@ const App = () => {
     infected: '',
     recovered: '',
     tmpdeaths: '',
-    countries: [],
+    countries: '',
   });
 
   const [currentcountry, handlecountries] = useState('global');
@@ -88,7 +88,7 @@ const App = () => {
       <WrapperChart>
         <Chart infected={states.infected} recovered={states.recovered} deaths={states.tmpdeaths} />
       </WrapperChart>
-    </div >
+    </div>
   );
 }
 
